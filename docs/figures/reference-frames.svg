@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="590" viewBox="0 0 1000 590" role="img" aria-labelledby="title desc">
+<title id="title">Earth-fixed and inertial axes</title>
+<desc id="desc">Viewed from above the North Pole, Earth-fixed x and y axes are rotated counterclockwise by theta relative to inertial axes. Both frames share their origin and z-axis.</desc>
+<defs><marker id="blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#376db0"/></marker><marker id="teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#007d83"/></marker></defs>
+<style>text{font-family:Arial,sans-serif;font-size:19px;fill:#162b40}.small{font-size:16px}.title{font-size:27px;font-weight:bold}</style>
+<rect width="1000" height="590" fill="#f7fafc"/>
+<text x="40" y="48" class="title">One position, two sets of Earth-centered axes</text>
+<text x="40" y="81">View from above the North Pole · Earth rotates counterclockwise</text>
+<circle cx="300" cy="345" r="150" fill="#dcebf5"/>
+<line x1="300" y1="345" x2="560" y2="345" stroke="#376db0" stroke-width="3" marker-end="url(#blue)"/>
+<line x1="300" y1="345" x2="300" y2="115" stroke="#376db0" stroke-width="3" marker-end="url(#blue)"/>
+<text x="568" y="352">x (ECI)</text><text x="314" y="130">y (ECI)</text>
+<line x1="300" y1="345" x2="504.8" y2="201.6" stroke="#007d83" stroke-width="3" marker-end="url(#teal)"/>
+<line x1="300" y1="345" x2="156.6" y2="140.2" stroke="#007d83" stroke-width="3" marker-end="url(#teal)"/>
+<text x="488" y="182">x (ECEF)</text><text x="65" y="128">y (ECEF)</text>
+<path d="M390 345 A90 90 0 0 0 373.72 293.38" fill="none" stroke="#007d83" stroke-width="2" marker-end="url(#teal)"/>
+<text x="403" y="321">θ</text>
+<circle cx="300" cy="345" r="6" fill="#162b40"/>
+<text x="230" y="384">Earth’s center</text>
+<circle cx="422.87" cy="258.96" r="7" fill="#b56a15"/>
+<text x="438" y="272" class="small">Equatorial station</text>
+<text x="438" y="294" class="small">at longitude 0°</text>
+<rect x="665" y="155" width="295" height="275" rx="12" fill="white" stroke="#dce5eb"/>
+<text x="685" y="193" style="font-weight:bold">Ground-station coordinates</text>
+<text x="685" y="236" style="fill:#007d83">ECEF: constant</text>
+<text x="685" y="265" class="small">[R, 0, 0]</text>
+<text x="685" y="312" style="fill:#376db0">ECI: change with θ</text>
+<text x="685" y="341" class="small">[R cos θ, R sin θ, 0]</text>
+<text x="685" y="391" class="small">R = spherical Earth radius</text>
+<text x="40" y="532">The station rotates with Earth; its coordinates depend on the chosen axes.</text>
+<text x="40" y="563" class="small">Shared +z points toward the viewer. Simplified fixed-axis model; illustrative angle.</text>
+</svg>

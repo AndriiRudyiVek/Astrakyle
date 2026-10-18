@@ -11,3 +11,4 @@ The project is in its initial setup stage. Its primary goal is to build a deep u
 The [project knowledge base](docs/README.md) records studied concepts, working assumptions, and open questions.
 
 - [Satellite service conditions: visibility and elevation](docs/research/001-satellite-service-conditions.md) — includes illustrated geometry, service requirements, and the first simulation milestone.
+- [Reference frames and Earth’s rotation](docs/research/002-reference-frames-and-earth-rotation.md) — ECI/ECEF transformations, local ENU coordinates, and antenna-pointing angles.

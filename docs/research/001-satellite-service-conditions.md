@@ -79,7 +79,7 @@ For a = 500 km and b = 500 km, elevation is 45°. For b = 0, the satellite is ov
 
 A geostationary satellite ideally remains at the same apparent position relative to a fixed ground observer. A low Earth orbit satellite moves across the observer's sky, so directional terminals must track it and continued service may require switching to another satellite. ESA's introductory overview explains this distinction [2].
 
-Earth rotation and orbital motion both affect the geometry over time. In an Earth-fixed frame, a fixed ground station has constant coordinates while the satellite coordinates change. In an inertial frame, the ground location rotates with Earth. Mixing these frames would produce incorrect elevation angles.
+Earth rotation and orbital motion both affect the geometry over time. In an Earth-fixed frame, a fixed ground station has constant coordinates while the satellite coordinates change. In an inertial frame, the ground location rotates with Earth. Mixing these frames would produce incorrect elevation angles. [Note 002 — Reference frames and Earth’s rotation](002-reference-frames-and-earth-rotation.md) develops the transformations and local pointing calculations.
 
 ![Two overlapping geometric access windows with an example opportunity for handover](../figures/access-windows.svg)
 
