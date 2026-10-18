@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+<style>text{font-family:Arial,sans-serif;fill:#162b40;font-size:19px}.small{font-size:16px}.title{font-size:28px;font-weight:bold}</style>
+<rect width="1000" height="560" fill="#f7fafc"/>
+<title id="title">Overlapping satellite access windows</title><desc id="desc">Satellite A and satellite B each have a geometric access window. Their overlap is an opportunity for handover, but does not guarantee service.</desc>
+<text x="45" y="52" class="title">Overlapping visibility can enable a handover</text>
+<text x="45" y="90">Each bar marks an interval when elevation meets the minimum.</text>
+<rect x="485" y="135" width="135" height="235" rx="8" fill="#e7dfef"/>
+<text x="45" y="205">Satellite A</text>
+<text x="45" y="305">Satellite B</text>
+<rect x="220" y="170" width="400" height="55" rx="8" fill="#007d83"/>
+<rect x="485" y="270" width="395" height="55" rx="8" fill="#376db0"/>
+<text x="270" y="205" style="fill:white">Geometric access</text>
+<text x="640" y="305" style="fill:white">Geometric access</text>
+<line x1="200" y1="390" x2="925" y2="390" stroke="#587085" stroke-width="2"/>
+<path d="M925 390 l-12 -6 v12 Z" fill="#587085"/>
+<text x="870" y="420">Time</text>
+<line x1="552" y1="370" x2="552" y2="448" stroke="#725385" stroke-width="2"/>
+<text x="370" y="477">Overlap: possible handover interval</text>
+<text x="45" y="535" class="small">Schematic, not simulation output. Visibility alone does not guarantee communication service.</text>
+</svg>
