@@ -105,8 +105,7 @@ Do not subtract an ECI satellite position directly from an ECEF ground position.
 At station latitude $\phi$ and longitude $\lambda$, project the relative ECEF vector onto the local axes:
 
 $$
-\begin{bmatrix}E\\N\\U\end{bmatrix}
-=
+\begin{bmatrix}E\\N\\U\end{bmatrix} =
 \begin{bmatrix}
 -\sin\lambda & \cos\lambda & 0 \\
 -\sin\phi\cos\lambda & -\sin\phi\sin\lambda & \cos\phi \\
