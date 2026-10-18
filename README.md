@@ -1,5 +1,3 @@
-# Astrakyle
-
 ![A satellite drifts above Earth’s curved horizon and becomes transparent to reveal active neural connections, in GitHub’s dark-theme color palette](docs/figures/astrakyle-neural-satellite.gif)
 
 Astrakyle is a learning and research project exploring adaptive satellite communications constellations at the intersection of aerospace engineering and AI.
