@@ -70,7 +70,7 @@ The equality convention includes the boundary; exactly 0° is only an ideal tang
 Take a ground location **g** = (R, 0, 0), so local up points along the positive x-axis. If **s** = (R + a, b, 0), with a > 0 and b ≥ 0, then
 
 $$
-e = \arctan2(a,b).
+e = \mathrm{atan2}(a,b).
 $$
 
 For a = 500 km and b = 500 km, elevation is 45°. For b = 0, the satellite is overhead at 90°. Here a is the local-up displacement; it is not generally orbital altitude. These are geometric sanity checks, not simulated orbital positions.

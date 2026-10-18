@@ -122,9 +122,9 @@ For our sphere, up is radial. For an ellipsoid, use geodetic latitude and the co
 ## 5. Compute azimuth, elevation, and range
 
 $$
-A=\operatorname{atan2}(E,N)\pmod{2\pi},
+A=\mathrm{atan2}(E,N)\pmod{2\pi},
 \qquad
-\epsilon=\operatorname{atan2}\left(U,\sqrt{E^2+N^2}\right),
+\epsilon=\mathrm{atan2}\left(U,\sqrt{E^2+N^2}\right),
 \qquad
 d=\sqrt{E^2+N^2+U^2}.
 $$
@@ -141,8 +141,8 @@ Suppose the local relative vector is $[E,N,U]=[300,400,500]$ km. Its horizontal 
 
 | Quantity | Calculation | Result |
 | --- | --- | --- |
-| Azimuth | $\operatorname{atan2}(300,400)$ | 36.87°, northeast |
-| Elevation | $\operatorname{atan2}(500,500)$ | 45° |
+| Azimuth | `atan2(300, 400)` | 36.87°, northeast |
+| Elevation | `atan2(500, 500)` | 45° |
 | Slant range | $\sqrt{300^2+400^2+500^2}$ | 707.1 km |
 
 These are illustrative local coordinates, not a simulated orbital pass.
