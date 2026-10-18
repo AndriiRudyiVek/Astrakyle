@@ -1,6 +1,6 @@
 # Astrakyle
 
-![Animated satellite constellation orbiting a stylized Earth in Astrakyle’s blue-and-teal palette](docs/figures/astrakyle-orbits.gif)
+![A satellite drifts above Earth’s curved horizon and becomes transparent to reveal active neural connections, in a film-noir style](docs/figures/astrakyle-neural-satellite.gif)
 
 Astrakyle is a learning and research project exploring adaptive satellite communications constellations at the intersection of aerospace engineering and AI.
 
