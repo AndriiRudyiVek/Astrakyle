@@ -43,14 +43,12 @@ base=Image.fromarray(np.clip(base,0,255).astype('uint8')).convert('RGBA')
 d=ImageDraw.Draw(base)
 for text,px,py,size,bold,color in [
  ('A S T R A K Y L E',42,65,13,True,ACCENT),
- ('Connection',40,112,44,True,TEXT),
- ('in motion.',40,164,44,True,TEXT),
- ('Exploring adaptive satellite',43,242,18,False,MUTED),
- ('communications through AI.',43,270,18,False,MUTED),
- ('ORBIT  /  CONNECT  /  ADAPT',43,346,12,True,MUTED),
- ('CONCEPT VISUAL · NOT TO SCALE',43,442,10,False,MUTED)]:
+ ('Where intelligence',40,125,36,True,TEXT),
+ ('meets orbit.',40,171,36,True,TEXT),
+ ('Satellite communications',43,250,16,False,MUTED),
+ ('Orbital mechanics · Adaptive AI',43,280,16,False,MUTED),
+ ('Resource allocation',43,310,16,False,MUTED)]:
  d.text((px*S,py*S),text,font=font(size,bold),fill=color)
-d.line((43*S,323*S,105*S,323*S),fill=ACCENT,width=2*S)
 frames=[]
 for i in range(N):
  t=i/N
