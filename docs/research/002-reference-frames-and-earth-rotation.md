@@ -83,7 +83,11 @@ Once both positions are in ECEF at the same time:
 
 $$
 \boldsymbol{\rho}^E(t)=\mathbf{r}_s^E(t)-\mathbf{r}_g^E
-=\begin{bmatrix}\Delta x\\\Delta y\\\Delta z\end{bmatrix}.
+=\begin{bmatrix}
+\Delta x \\
+\Delta y \\
+\Delta z
+\end{bmatrix}.
 $$
 
 Alternatively, subtract in ECI:
@@ -105,13 +109,21 @@ Do not subtract an ECI satellite position directly from an ECEF ground position.
 At station latitude $\phi$ and longitude $\lambda$, project the relative ECEF vector onto the local axes:
 
 $$
-\begin{bmatrix}E\\N\\U\end{bmatrix} =
+\begin{bmatrix}
+E \\
+N \\
+U
+\end{bmatrix} =
 \begin{bmatrix}
 -\sin\lambda & \cos\lambda & 0 \\
 -\sin\phi\cos\lambda & -\sin\phi\sin\lambda & \cos\phi \\
 \cos\phi\cos\lambda & \cos\phi\sin\lambda & \sin\phi
 \end{bmatrix}
-\begin{bmatrix}\Delta x\\\Delta y\\\Delta z\end{bmatrix}.
+\begin{bmatrix}
+\Delta x \\
+\Delta y \\
+\Delta z
+\end{bmatrix}.
 $$
 
 Each row is a local unit direction expressed in ECEF. The components $E,N,U$ are distances, not angles. Subtract the station position **before** applying this matrix: ENU is centered at the station. ESA Navipedia gives these local basis vectors and their relation to satellite directions [1].
