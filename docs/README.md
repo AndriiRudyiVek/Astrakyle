@@ -8,6 +8,7 @@ These notes record Astrakyle's learning progress, working assumptions, and open 
 | --- | --- | --- |
 | [001 — Satellite service conditions](research/001-satellite-service-conditions.md) | Visibility, elevation, tracking, and the other requirements for communication | Conceptual study; implementation pending |
 | [002 — Reference frames and Earth’s rotation](research/002-reference-frames-and-earth-rotation.md) | ECI/ECEF transformations, local ENU, azimuth, elevation, and range | Conceptual study; implementation pending |
+| [003 — Circular orbital motion](research/003-circular-orbital-motion.md) | Orbital radius, speed, period, inclination, RAAN, and ECI position over time | Conceptual study; implementation pending |
 
 ## Current project direction
 
@@ -15,7 +16,7 @@ Astrakyle explores adaptive satellite communications through incremental learnin
 
 The planned decisions are which satellite serves each ground location and how capacity is allocated. Evaluation will consider demand served, satisfaction at each location, and periods without service. Future scenarios include satellite failures, satellite additions, and regional demand changes.
 
-The learning sequence is orbital mechanics → visibility and coverage → constellations → classical optimization/control → AI and reinforcement learning. The service-condition concepts in Note 001 and the reference-frame geometry in Note 002 have been studied conceptually. Simulation and later optimization/AI stages remain planned work.
+The learning sequence is orbital mechanics → visibility and coverage → constellations → classical optimization/control → AI and reinforcement learning. Notes 001–003 cover service conditions, reference-frame geometry, and ideal circular orbital motion at a conceptual level. Simulation and later optimization/AI stages remain planned work.
 
 ## Maintaining these notes
 
@@ -24,3 +25,5 @@ Use numbered Markdown notes for new topics, with a date, status, assumptions, ex
 The initial record was consolidated on 2026-10-18 from the project chats **Research** and **Satellite Service Conditions**. Equations and original diagrams in Note 001 make the discussed geometry explicit; they do not represent a completed simulation.
 
 Note 002 was consolidated on 2026-10-18 from **Reference frames and Earth’s rotation**. It extends the visibility geometry with explicit coordinate transformations and a local pointing example.
+
+Note 003 was consolidated on 2026-10-18 from **Circular orbital motion**, recording the analytical ECI position model and worked orbital examples.
