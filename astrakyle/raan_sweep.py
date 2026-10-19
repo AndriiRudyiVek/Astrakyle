@@ -6,22 +6,29 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .two_satellites import run
+from .access import access_metrics
 
 RAAN_VALUES = (0, 60, 120, 180)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--days', type=int, default=1, help='Continuous simulated days from the original epoch')
     parser.add_argument('--step-s', type=float, default=10)
-    parser.add_argument('--output', type=Path, default=Path('outputs/raan_sweep'))
+    parser.add_argument('--output', type=Path, default=None)
     args = parser.parse_args()
+    if args.days < 1:
+        parser.error('--days must be positive')
+    window_s = args.days * 86400
+    if args.output is None:
+        args.output = Path('outputs/raan_sweep' if args.days == 1 else f'outputs/raan_sweep_{args.days}days')
     try:
-        runs = [(raan, run(args.step_s, raan)) for raan in RAAN_VALUES]
-        fine = [(raan, run(args.step_s / 2, raan)) for raan in RAAN_VALUES]
+        runs = [(raan, run(args.step_s, raan, window_s)) for raan in RAAN_VALUES]
+        fine = [(raan, run(args.step_s / 2, raan, window_s)) for raan in RAAN_VALUES]
     except ValueError as exc:
         parser.error(str(exc))
     args.output.mkdir(parents=True, exist_ok=True)
-    rows, details = [], []
+    rows, details, daily_rows = [], [], []
     for (raan, result), (_, refined) in zip(runs, fine):
         orbits, station, samples, merged, metrics = result
         combined = metrics['combined']
@@ -35,6 +42,15 @@ def main():
                    total_access_difference_s=abs(combined['total_access_s'] - finer['total_access_s']),
                    longest_gap_difference_s=abs(combined['longest_gap_s'] - finer['longest_gap_s']))
         rows.append(row)
+        for day in range(args.days):
+            start, end = day * 86400, (day + 1) * 86400
+            # Clip the continuous union for reporting only; never reset propagation.
+            clipped = [(max(s, start) - start, min(e, end) - start)
+                       for s, e in merged if e > start and s < end]
+            daily = access_metrics(clipped, 86400)
+            daily_rows.append(dict(second_raan_deg=raan, day=day + 1,
+                                   access_percent=daily['access_percent'],
+                                   longest_gap_s=daily['longest_gap_s']))
         details.append(dict(second_raan_deg=raan, orbits=[asdict(o) for o in orbits],
                             station=asdict(station), metrics=metrics,
                             fine_metrics=refined[4],
@@ -44,8 +60,12 @@ def main():
         writer = csv.DictWriter(f, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+    with (args.output / 'daily_comparison.csv').open('w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=list(daily_rows[0]))
+        writer.writeheader()
+        writer.writerows(daily_rows)
     (args.output / 'results.json').write_text(json.dumps(dict(
-        window_s=86400, minimum_deg=10, earth_angle_deg=0, step_s=args.step_s,
+        window_s=window_s, minimum_deg=10, earth_angle_deg=0, step_s=args.step_s,
         fine_step_s=args.step_s / 2, epoch='synthetic', configurations=details), indent=2) + '\n')
 
     import matplotlib
@@ -63,7 +83,7 @@ def main():
         gap = max(metrics['combined']['gaps'], key=lambda g: g['duration_s'])
         ax.axvspan(gap['start_s'] / 3600, gap['end_s'] / 3600, color='#f6b756', alpha=0.18)
         ax.set(yticks=[0, 1, 2], yticklabels=['Union', 'Satellite 2', 'Satellite 1'],
-               xlim=(0, 24), xticks=range(0, 25, 2),
+               xlim=(0, args.days * 24), xticks=range(0, args.days * 24 + 1, 2 if args.days == 1 else 24),
                title=f"Satellite 2 RAAN = {raan}°   |   Access {metrics['combined']['access_percent']:.3f}%   |   Longest gap {gap['duration_s']/3600:.3f} h")
         ax.grid(axis='x', alpha=0.2)
     axes[0].legend(handles=[Patch(facecolor='#f6b756', alpha=0.3, label='Longest gap within window')],

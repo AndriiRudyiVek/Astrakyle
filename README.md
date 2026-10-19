@@ -97,6 +97,33 @@ For this station and window, rotating the second plane distributes access more e
 
 See [Orbital-plane diversity and RAAN](docs/research/004-orbital-plane-diversity-and-raan.md) for the distinction between plane orientation and orbital phase.
 
+### Seven continuous days
+
+```sh
+python -m astrakyle.raan_sweep --days 7
+```
+
+This extends the same epoch to 604,800 seconds; orbital phase and Earth rotation advance continuously. Output defaults to `outputs/raan_sweep_7days/`, preserving the original one-day outputs. Whole-window metrics use the continuous union, including gaps across day boundaries. Beginning and ending gaps remain separate. `daily_comparison.csv` is a supplementary clipped-window view, not a set of restarted simulations.
+
+| Satellite 2 RAAN | Seven-day access fraction | Longest gap |
+| --- | ---: | ---: |
+| 0° | 4.9513% | 16.2031 h |
+| 60° | 4.9433% | 13.0623 h |
+| 120° | 4.9537% | 9.9029 h |
+| 180° | 4.9530% | 5.1735 h |
+
+The longest-gap ranking persists, while access-fraction ranking changes slightly. The 120° case had a more favorable longest gap in the first day (8.31 h); the 180° case remains near 5.17 h over the week. All configurations have a beginning gap of 756.86 s and an ending gap of 2,094.84 s. Counts, refined total access, and longest gaps agree at 10-second and 5-second sampling. This supports the plane-diversity benefit over this week, without establishing an optimum or daily periodicity.
+
+### Station-latitude comparison
+
+```sh
+python -m astrakyle.latitude_sweep
+```
+
+This compares latitudes 0°, 30°, 50.45°, and 70° at fixed longitude 30.52° E for the same four RAAN values and seven continuous days. It repeats each case at half the sampling interval and exports metrics, boundary gaps, passes, merged intervals, and a comparison figure to `outputs/latitude_sweep/`.
+
+The shortest longest gap occurs at RAAN 60° for latitude 0°, at 120° for latitude 30° (nearly tied with 180°), and at 180° for Kyiv's latitude. At latitude 70° all cases have zero access: the 53° inclination and elevation-limited footprint cannot reach the station. Its entire 168-hour window is one gap touching both boundaries, not two gaps. The 180° RAAN case gives identical elevation histories for the two satellites at the equator, so overlapping access contributes no additional time there. A configuration that works well for one latitude need not work well elsewhere.
+
 ## Knowledge base
 
 The [project knowledge base](docs/README.md) provides standalone technical articles with definitions, equations, worked examples, and references.

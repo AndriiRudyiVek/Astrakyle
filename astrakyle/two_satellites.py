@@ -10,17 +10,18 @@ from .geometry import CircularOrbit, GroundStation, elevation_deg
 from .passes import simulate
 
 
-def run(step_s=10.0, second_raan_deg=0.0):
-    station = GroundStation()
+def run(step_s=10.0, second_raan_deg=0.0, window_s=86400.0, latitude_deg=50.45):
+    """Propagate continuously from the original synthetic epoch to window_s."""
+    station = GroundStation(latitude_deg=latitude_deg)
     orbits = [CircularOrbit(), CircularOrbit(initial_angle_deg=180, raan_deg=second_raan_deg)]
     results = [simulate(lambda t, orbit=orbit: elevation_deg(orbit, station, t),
-                        duration_s=86400, step_s=step_s, minimum_deg=10) for orbit in orbits]
+                        duration_s=window_s, step_s=step_s, minimum_deg=10) for orbit in orbits]
     individual = [[(p.start_s, p.end_s) for p in result[2]] for result in results]
     merged = merge_intervals(individual[0] + individual[1])
     metrics = {
-        'satellite_1': access_metrics(individual[0], 86400),
-        'satellite_2': access_metrics(individual[1], 86400),
-        'combined': access_metrics(merged, 86400),
+        'satellite_1': access_metrics(individual[0], window_s),
+        'satellite_2': access_metrics(individual[1], window_s),
+        'combined': access_metrics(merged, window_s),
     }
     return orbits, station, results, merged, metrics
 
