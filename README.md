@@ -6,10 +6,10 @@ The planned simulation starts with circular low Earth orbits, a rotating spheric
 
 The project is in its initial setup stage. Its primary goal is to build a deep understanding of orbital mechanics, coverage, and resource allocation through incremental implementation. This README will evolve as development progresses.
 
-## Research notes
+## Knowledge base
 
-The [project knowledge base](docs/README.md) records studied concepts, working assumptions, and open questions.
+The [project knowledge base](docs/README.md) provides standalone technical articles with definitions, equations, worked examples, and references.
 
-- [Satellite service conditions: visibility and elevation](docs/research/001-satellite-service-conditions.md) — includes illustrated geometry, service requirements, and the first simulation milestone.
+- [Satellite service conditions: visibility and elevation](docs/research/001-satellite-service-conditions.md) — explains illustrated geometry, service requirements, and access intervals.
 - [Reference frames and Earth’s rotation](docs/research/002-reference-frames-and-earth-rotation.md) — ECI/ECEF transformations, local ENU coordinates, and antenna-pointing angles.
 - [Circular orbital motion](docs/research/003-circular-orbital-motion.md) — orbital speed and period, plane orientation, and satellite ECI position over time.

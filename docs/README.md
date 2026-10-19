@@ -1,29 +1,34 @@
-# Project knowledge base
+# Satellite communications knowledge base
 
-These notes record Astrakyle's learning progress, working assumptions, and open questions. They are evolving research notes, not claims of completed experiments or implemented features.
+This knowledge base explains the orbital mechanics, geometry, and communication principles behind adaptive satellite constellations. Each article defines its assumptions, notation, and physical concepts so it can be read independently or used in a similar project.
 
-## Research notes
+## Articles
 
-| Note | Scope | Status |
-| --- | --- | --- |
-| [001 — Satellite service conditions](research/001-satellite-service-conditions.md) | Visibility, elevation, tracking, and the other requirements for communication | Conceptual study; implementation pending |
-| [002 — Reference frames and Earth’s rotation](research/002-reference-frames-and-earth-rotation.md) | ECI/ECEF transformations, local ENU, azimuth, elevation, and range | Conceptual study; implementation pending |
-| [003 — Circular orbital motion](research/003-circular-orbital-motion.md) | Orbital radius, speed, period, inclination, RAAN, and ECI position over time | Conceptual study; implementation pending |
+| Article | Scope |
+| --- | --- |
+| [001 — Satellite service conditions](research/001-satellite-service-conditions.md) | Visibility, elevation, antenna coverage, radio links, capacity, and service continuity |
+| [002 — Reference frames and Earth’s rotation](research/002-reference-frames-and-earth-rotation.md) | ECI, ECEF, ENU, coordinate transformations, and pointing angles |
+| [003 — Circular orbital motion](research/003-circular-orbital-motion.md) | Orbital radius, speed, period, inclination, RAAN, and ECI position over time |
 
-## Current project direction
+For a conceptual introduction, begin with service conditions. To calculate a satellite’s apparent position, combine circular orbital motion with the reference-frame transformations, then evaluate elevation and access.
 
-Astrakyle explores adaptive satellite communications through incremental learning and simulation. The initial model uses circular low Earth orbits, a rotating spherical Earth, synthetic ground demand, and simplified satellite capacities.
+## Relationship to Astrakyle
 
-The planned decisions are which satellite serves each ground location and how capacity is allocated. Evaluation will consider demand served, satisfaction at each location, and periods without service. Future scenarios include satellite failures, satellite additions, and regional demand changes.
+Astrakyle investigates adaptive satellite communications using a simplified initial model: circular low Earth orbits, a rotating spherical Earth, ground demand, and limited satellite capacity. Orbital motion determines satellite positions; reference-frame transformations relate them to ground locations; service conditions determine which communication links are possible.
 
-The learning sequence is orbital mechanics → visibility and coverage → constellations → classical optimization/control → AI and reinforcement learning. Notes 001–003 cover service conditions, reference-frame geometry, and ideal circular orbital motion at a conceptual level. Simulation and later optimization/AI stages remain planned work.
+These articles explain the underlying theory. Project scope and development status are described in the [repository README](../README.md).
 
-## Maintaining these notes
+## Writing conventions
 
-Use numbered Markdown notes for new topics, with a date, status, assumptions, explanations, references, and open questions. Keep diagrams in `figures/`, embed them using relative paths, and distinguish illustrative examples from simulation results. Update this index as the project progresses.
+Write standalone, encyclopedia-style articles for readers with no access to project conversations. Cover each topic in sufficient detail to explain its meaning, derivation, application, and limitations.
 
-The initial record was consolidated on 2026-10-18 from the project chats **Research** and **Satellite Service Conditions**. Equations and original diagrams in Note 001 make the discussed geometry explicit; they do not represent a completed simulation.
+- Introduce the physical problem and define terminology, symbols, units, frames, and sign conventions before using them.
+- State assumptions explicitly and distinguish simplified models from more general cases.
+- Explain equations and include worked examples with reproducible inputs and clearly rounded outputs.
+- Use diagrams when they clarify geometry or relationships. Keep editable assets in `figures/` and embed them with relative paths.
+- Cite authoritative external references. Cross-link related articles for further depth, while retaining the context needed to understand the current article.
+- Exclude references to local chats, session history, learning progress, implementation checklists, open questions, and project-specific next steps.
+- Keep project planning and implementation status outside the technical articles.
+- Use numbered Markdown filenames and update this index when adding an article.
 
-Note 002 was consolidated on 2026-10-18 from **Reference frames and Earth’s rotation**. It extends the visibility geometry with explicit coordinate transformations and a local pointing example.
-
-Note 003 was consolidated on 2026-10-18 from **Circular orbital motion**, recording the analytical ECI position model and worked orbital examples.
+For compatible math rendering, put matrix rows on separate lines, keep equality signs on a line with an expression, and use simple supported commands such as `\mathrm{atan2}`. Avoid `\operatorname`, which the current renderer rejects.

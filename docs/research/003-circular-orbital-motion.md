@@ -1,19 +1,14 @@
 # 003 — Circular orbital motion
 
-Date: 2026-10-18  
-Reviewed: 2026-10-19  
-Status: Conceptual study; simulation implementation pending  
-Question: How can we calculate a satellite’s ECI position from its altitude, orbital plane, and initial position along the orbit?
-
-## Main conclusion
+## Overview
 
 An ideal circular orbit is a fixed circle in inertial space, traversed at constant angular speed. Altitude determines its radius and speed; inclination and RAAN orient its plane; an initial orbital angle places the satellite on the circle. We can calculate position directly at any requested time without stepping through intermediate times.
 
-This supplies the satellite ECI position needed by [Note 002 — Reference frames and Earth’s rotation](002-reference-frames-and-earth-rotation.md). After conversion to ECEF and local ENU coordinates, we can apply the visibility rule in [Note 001](001-satellite-service-conditions.md).
+This supplies the satellite ECI position needed by [Reference frames and Earth’s rotation](002-reference-frames-and-earth-rotation.md). After conversion to ECEF and local ENU coordinates, we can apply the visibility rule in [Satellite service conditions](001-satellite-service-conditions.md).
 
 ## Assumptions and inputs
 
-Use an ideal two-body model with a spherical Earth, negligible satellite mass, and zero orbital eccentricity. Ignore atmospheric drag, Earth’s oblateness, third-body gravity, and maneuvers. The orbital plane remains fixed in our simplified ECI frame.
+Use an ideal two-body model with a spherical Earth, negligible satellite mass, and zero orbital eccentricity. Ignore atmospheric drag, Earth’s oblateness, third-body gravity, and maneuvers. The orbital plane remains fixed in a simplified Earth-centered inertial (ECI) frame: the origin is Earth’s center, +z points along the north polar axis, and +x and +y are fixed reference directions in the equatorial plane. They do not rotate with Earth.
 
 | Input | Meaning | Units or convention |
 | --- | --- | --- |
@@ -24,7 +19,7 @@ Use an ideal two-body model with a spherical Earth, negligible satellite mass, a
 | t₀ | Epoch of the initial position | Time reference |
 | t − t₀ | Elapsed time | seconds |
 
-Use the discussion’s rounded constants: **R_E = 6378 km** and **μ_E = 398600 km³/s²**. These are educational model choices, not precision geodetic constants. Keep the same radius and units in the ground-location model.
+The worked examples use the rounded constants: **R_E = 6378 km** and **μ_E = 398600 km³/s²**. These are educational model choices, not precision geodetic constants. Keep the same radius and units in the ground-location model.
 
 The ascending node is the equatorial crossing toward the north; the descending node is the crossing toward the south. Inclination 90° gives a polar orbit. For an exactly equatorial orbit, the ascending node and RAAN are undefined; choose a reference direction consistently, such as Ω = 0, and measure the initial phase from it.
 
@@ -77,7 +72,7 @@ $$
 
 ## 3. Orient the circle in ECI
 
-First tilt the circle about its x-axis by inclination i, then rotate it about the ECI z-axis by RAAN Ω. Using the positive rotation convention from Note 002, the components are:
+First tilt the circle about its x-axis by inclination i, then rotate it about the ECI z-axis by RAAN Ω. Positive rotations follow the right-hand rule: a positive rotation about +z carries +x toward +y. The resulting components are:
 
 $$
 x(t) = r\left[\cos\Omega\cos u(t)-\sin\Omega\cos i\sin u(t)\right].
@@ -101,7 +96,7 @@ $$
 
 The z-coordinate measures displacement from the equatorial plane. It is not altitude above Earth’s surface.
 
-## Worked examples from the discussion
+## Worked examples
 
 ### A 500 km orbit inclined at 45°
 
@@ -137,7 +132,7 @@ u = π/2 + 0.0011068159014474056 × 600
 ECI position ≈ (0, −4239.20, 5416.28) km
 ```
 
-The decreasing z-coordinate does not indicate decreasing altitude. The radius is still 6878 km and the altitude is still 500 km. These values were recomputed from the stated constants, rather than rounded intermediate angles from the discussion. All examples are analytical illustrations, not simulation results.
+The decreasing z-coordinate does not indicate decreasing altitude. The radius is still 6878 km and the altitude is still 500 km. These values were recomputed from the stated constants, rather than rounded intermediate angles . All examples are analytical illustrations, not simulation results.
 
 ## Calculation recipe
 
@@ -156,26 +151,18 @@ z = r × sin(inclination) × sin(u)
 Return (x, y, z) in km in the chosen ECI frame.
 ```
 
-The learning chat also sketched a NumPy function implementing these equations. This note records the method; it does not introduce a production orbit propagator.
+## Geometric properties and model limitations
 
-## Checks for implementation
+A circular trajectory repeats after one period. After half a period, the position vector is the negative of its starting value; after a full period, it returns to that value. Rotating the orbital plane changes the coordinate components but preserves the orbital radius, speed, and period.
 
-- Verify that the position norm equals r at several times and orientations.
-- Verify that position repeats after one period and negates after half a period.
-- Reproduce the inclined and polar examples above.
-- Verify that changing RAAN rotates the plane without changing radius or period.
-- Verify that increasing radius decreases speed and increases period.
-- Use the same epoch and frame convention when connecting to Note 002.
+The model has constant **speed**, but not constant **velocity**. Velocity is tangent to the circle and continuously changes direction; gravitational acceleration points toward Earth’s center. The angular speed n describes motion within the orbital plane and is distinct from Earth’s rotation rate.
 
-## Open questions
+Inclination determines how far the trajectory extends north and south of the equator, while RAAN rotates that plane around the polar axis. Initial phase changes the satellite’s location within the same plane. These parameters separate orbit size, orientation, and timing, making the circular model useful for studying constellation geometry.
 
-- Which altitude, inclination, RAAN, and initial phase should the first project scenario use?
-- Which ground location, epoch, and initial Earth angle should accompany it?
-- What time step is sufficient to resolve visibility windows after converting to ENU?
-- When should eccentricity, drag, or orbital-plane precession enter the model?
+The formulas describe an unperturbed circular orbit. An eccentric orbit has a changing radius and nonuniform angular motion. Atmospheric drag, nonspherical gravity, and other perturbations can alter the orbit and its orientation over time. Those effects require a more detailed propagation model.
 
-## References and provenance
+For a complete ground-access calculation, the resulting ECI position must be paired with an observer position at the same time, transformed into a common frame, and converted into local elevation. The coordinate transformations and elevation definitions are developed in [Reference frames and Earth’s rotation](002-reference-frames-and-earth-rotation.md).
 
-Consolidated from the project chat **Circular orbital motion** on 2026-10-18, including its worked exercises and summary. The numerical examples were independently recalculated. The model limitations and equatorial reference-direction caveat clarify the assumptions for future implementation.
+## References
 
 1. NASA, [Basics of Space Flight — Gravity & Mechanics](https://science.nasa.gov/learn/basics-of-space-flight/chapter3-3/), circular motion and Kepler’s laws. Accessed 2026-10-18.

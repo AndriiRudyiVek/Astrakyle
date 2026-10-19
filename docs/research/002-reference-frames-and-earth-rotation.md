@@ -1,24 +1,20 @@
 # 002 — Reference frames and Earth’s rotation
 
-Date: 2026-10-18  
-Status: Conceptual study; simulation not yet implemented  
-Question: How do we express a ground location and an orbiting satellite in the same frame, then find where the satellite appears in the sky?
+## Overview
 
-## Main conclusion
+Before subtracting two positions, express them relative to the **same origin and axes at the same instant**, using consistent units. Earth rotation connects the simplified inertial and Earth-fixed frames. A local East–North–Up frame then converts the station-to-satellite vector into antenna-pointing angles and distance.
 
-Before subtracting two positions, express them relative to the **same origin and axes at the same instant**, using consistent units. Earth rotation connects our simplified inertial and Earth-fixed frames. A local East–North–Up frame then converts the station-to-satellite vector into antenna-pointing angles and distance.
-
-This extends [Note 001 — Satellite service conditions](001-satellite-service-conditions.md), which introduced elevation and geometric visibility.
+This extends [Satellite service conditions](001-satellite-service-conditions.md), which introduced elevation and geometric visibility.
 
 ## The three frames
 
-| Frame | Origin | Axes | Role in Astrakyle |
+| Frame | Origin | Axes | Typical use |
 | --- | --- | --- | --- |
 | Earth-centered inertial (ECI) | Earth’s center | Approximately fixed relative to distant stars | Describe satellite orbital motion. |
 | Earth-centered, Earth-fixed (ECEF) | Earth’s center | Rotate with Earth | Describe ground locations and compare positions relative to Earth. |
 | East–North–Up (ENU) | Ground station | Local east, north, and up | Describe the satellite’s direction and slant range from the station. |
 
-A stationary ground location has constant ECEF coordinates in our model. In ECI, an equatorial station traces a circle as Earth rotates. These are two descriptions of the same physical motion.
+A stationary ground location has constant ECEF coordinates in a rigid-Earth model. In ECI, an equatorial station traces a circle as Earth rotates. These are two descriptions of the same physical motion.
 
 ECI denotes a family of frames, not a unique coordinate system. Here we use a simplified ECI frame whose z-axis coincides with Earth’s fixed rotation axis. We neglect precession, nutation, polar motion, and variations in rotation rate. These equations are an educational model, not a complete transformation between precise celestial and terrestrial reference systems.
 
@@ -45,7 +41,7 @@ For an ellipsoidal Earth, the position formula must change. Geodetic latitude is
 
 ## 2. Account for Earth’s rotation
 
-Define $\theta(t)$ as the angle from the inertial x-axis to the Earth-fixed x-axis, positive toward the inertial y-axis. In our constant-rate model:
+Define $\theta(t)$ as the angle from the inertial x-axis to the Earth-fixed x-axis, positive toward the inertial y-axis. In a constant-rate model:
 
 $$
 \theta(t)=\theta_0+\omega_E(t-t_0), \qquad
@@ -128,7 +124,7 @@ $$
 
 Each row is a local unit direction expressed in ECEF. The components $E,N,U$ are distances, not angles. Subtract the station position **before** applying this matrix: ENU is centered at the station. ESA Navipedia gives these local basis vectors and their relation to satellite directions [1].
 
-For our sphere, up is radial. For an ellipsoid, use geodetic latitude and the corresponding ellipsoidal station position so that up follows the surface normal. At the geographic poles, a longitude convention is needed to choose local east and north.
+For a sphere, up is radial. For an ellipsoid, use geodetic latitude and the corresponding ellipsoidal station position so that up follows the surface normal. At the geographic poles, a longitude convention is needed to choose local east and north.
 
 ## 5. Compute azimuth, elevation, and range
 
@@ -142,11 +138,11 @@ $$
 
 Azimuth is measured clockwise from north: north = 0°, east = 90°, south = 180°, west = 270°. The argument order is **east first, north second**. Normalize to [0°, 360°) after converting from radians.
 
-Elevation is measured above the local horizontal: 0° is the horizon, 90° is overhead, and negative values are below the local horizontal. We use $\epsilon$ for elevation to avoid confusing it with the east component; it is the same elevation called $e$ in Note 001.
+Elevation is measured above the local horizontal: 0° is the horizon, 90° is overhead, and negative values are below the local horizontal. The symbol $\epsilon$ denotes elevation to distinguish it from the east component E.
 
-For nonzero range, this elevation is equivalent to $\arcsin(U/d)$ and to Note 001’s projection onto local up. If both horizontal components vanish, azimuth is undefined. If the entire relative vector is zero, both pointing angles are undefined; an implementation should report that degeneracy explicitly.
+For nonzero range, this elevation is equivalent to $\arcsin(U/d)$ and to the projection of the line-of-sight unit vector onto local up. If both horizontal components vanish, azimuth is undefined. If the entire relative vector is zero, both pointing angles are undefined; an implementation should report that degeneracy explicitly.
 
-### Worked example from the discussion
+### Worked example
 
 Suppose the local relative vector is $[E,N,U]=[300,400,500]$ km. Its horizontal length is 500 km.
 
@@ -158,32 +154,23 @@ Suppose the local relative vector is $[E,N,U]=[300,400,500]$ km. Its horizontal 
 
 These are illustrative local coordinates, not a simulated orbital pass.
 
-## Workflow and checks for implementation
+## Complete coordinate workflow
 
-**Satellite ECI → satellite ECEF → subtract station ECEF → relative ENU → azimuth, elevation, and range.** Apply the chosen minimum-elevation rule from Note 001 only after obtaining the elevation.
+**Satellite ECI → satellite ECEF → subtract station ECEF → relative ENU → azimuth, elevation, and range.**
 
-Useful checks when implementing this workflow:
+The Earth-centered rotation changes the axes used to describe position. Subtracting the station position changes the origin to the observer. The ENU rotation then aligns the relative vector with local compass and vertical directions. These operations have different roles: rotating an Earth-centered satellite position directly into ENU without subtracting the observer would not produce the station-to-satellite direction.
 
-- A +90° Earth rotation maps ECEF +x to ECI +y under the stated convention.
-- A rotation followed by its inverse recovers the starting vector.
-- Slant range agrees in ECI, ECEF, and ENU.
-- At latitude 0°, longitude 0°, ECEF +y is east, +z is north, and +x is up.
-- North and east horizon vectors yield azimuths 0° and 90° with elevation 0°.
-- An overhead vector yields elevation 90° and undefined azimuth.
-- The worked example reproduces 36.87°, 45°, and 707.1 km.
+At latitude 0° and longitude 0°, the local directions are especially simple: ECEF +y points east, +z points north, and +x points up. A vector along local north has azimuth 0°; a vector along local east has azimuth 90°. An overhead vector has elevation 90° but no unique azimuth.
 
-No orbit propagation or visibility simulation is implemented by this note.
+All orthogonal rotations preserve length. Consequently, the same station-to-satellite vector has the same range in ECI, ECEF, and ENU. Its coordinates change, but its physical geometry does not. Elevation can then be compared with a chosen minimum to determine geometric access.
 
-## Open questions
+## Model scope and frame selection
 
-- Which epoch and initial Earth angle should the first synthetic scenario use?
-- How will the first circular orbit provide satellite ECI positions over time?
-- Which units, time step, and minimum elevation will the simulation use?
-- When will real ephemerides require a named precise frame and Earth-orientation model?
+The single-axis Earth rotation is appropriate for a simplified model with a fixed rotation axis. Precision ephemerides require named celestial and terrestrial frames, compatible time definitions, and the relevant Earth-orientation transformations. The epoch and initial rotation angle must be specified together; a rotation rate alone cannot identify the orientation of the terrestrial axes.
 
-## References and provenance
+An analytical source of satellite positions in this simplified ECI frame is described in [Circular orbital motion](003-circular-orbital-motion.md).
 
-This note consolidates the project chat **Reference frames and Earth’s rotation**, including its ECEF/ECI explanation, rotation convention, ENU transformation, and numerical example. The diagram and implementation checks organize that discussion for future use; they are not experimental results.
+## References
 
 1. ESA Navipedia, [Transformations between ECEF and ENU coordinates](https://gssc.esa.int/navipedia/index.php/Transformations_between_ECEF_and_ENU_coordinates). Accessed 2026-10-18.
 2. IAU Working Group on Numerical Standards for Fundamental Astronomy, [Current Best Estimates](https://iau-a3.gitlab.io/NSFA/NSFA_cbe.html), nominal mean angular velocity of Earth. Accessed 2026-10-18.
