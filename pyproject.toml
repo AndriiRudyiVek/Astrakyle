@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astrakyle"
+version = "0.1.0"
+description = "Educational satellite visibility experiments"
+requires-python = ">=3.10"
+dependencies = ["matplotlib>=3.8,<4"]
+
+[project.scripts]
+astrakyle-pass = "astrakyle.experiment:main"
+
+[tool.setuptools.packages.find]
+include = ["astrakyle*"]

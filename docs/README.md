@@ -9,6 +9,7 @@ This knowledge base explains the orbital mechanics, geometry, and communication 
 | [001 — Satellite service conditions](research/001-satellite-service-conditions.md) | Visibility, elevation, antenna coverage, radio links, capacity, and service continuity |
 | [002 — Reference frames and Earth’s rotation](research/002-reference-frames-and-earth-rotation.md) | ECI, ECEF, ENU, coordinate transformations, and pointing angles |
 | [003 — Circular orbital motion](research/003-circular-orbital-motion.md) | Orbital radius, speed, period, inclination, RAAN, and ECI position over time |
+| [004 — Orbital-plane diversity and RAAN](research/004-orbital-plane-diversity-and-raan.md) | Plane orientation versus orbital phase, and implications for access timing |
 
 For a conceptual introduction, begin with service conditions. To calculate a satellite’s apparent position, combine circular orbital motion with the reference-frame transformations, then evaluate elevation and access.
 
