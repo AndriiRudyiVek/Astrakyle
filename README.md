@@ -35,7 +35,9 @@ python -m astrakyle.experiment --step-s 1 --output outputs/fine
 python -m astrakyle.experiment --help
 ```
 
-Latitude, longitude, altitude, inclination, RAAN, initial orbital angle, Earth angle, and duration are also configurable. Generated outputs and the virtual environment are excluded from Git.
+Latitude, longitude, altitude, inclination, RAAN, initial orbital angle, Earth angle, and duration are also configurable. Generated outputs and the virtual environment are excluded from Git by default.
+The first coverage training run explicitly tracks its datasets, manifests, model,
+and evaluation artifacts for reproducibility.
 
 ### Calculation and accuracy
 
@@ -125,6 +127,76 @@ This compares latitudes 0°, 30°, 50.45°, and 70° at fixed longitude 30.52° 
 The shortest longest gap occurs at RAAN 60° for latitude 0°, at 120° for latitude 30° (nearly tied with 180°), and at 180° for Kyiv's latitude. At latitude 70° all cases have zero access: the 53° inclination and elevation-limited footprint cannot reach the station. Its entire 168-hour window is one gap touching both boundaries, not two gaps. The 180° RAAN case gives identical elevation histories for the two satellites at the equator, so overlapping access contributes no additional time there. A configuration that works well for one latitude need not work well elsewhere.
 
 ## Knowledge base
+
+The [first ML project plan](docs/planning/coverage-surrogate.md) explores
+predicting seven-day access fraction and longest gap from satellite 2's RAAN,
+initial orbital angle, and station latitude. Dataset generation, regression training, held-out evaluation, and prediction
+are implemented.
+
+Generate the 64-configuration pilot dataset:
+
+```sh
+python -m astrakyle.coverage_dataset
+```
+
+This varies satellite 2's RAAN and initial angle over 0°, 90°, 180°, and 270°,
+and station latitude over 0°, 30°, 50.45°, and 70°. Other settings match the
+seven-day experiments. Each case runs at 10-second and 5-second sampling;
+targets come from the finer run. A row is `checked` only when merged interval
+counts agree and total-access and longest-gap differences are each at most
+0.1 seconds. This is a numerical consistency check, not proof that no grazing
+passes were missed. Rows marked `unresolved` require investigation before training.
+
+Outputs in `outputs/coverage_pilot/` are `dataset.csv` and `manifest.json`.
+The manifest records the complete configuration list, fixed settings, seed,
+source hashes, Git revision/status, label tolerances, and dataset hash. Interrupted
+or failed generation is marked `failed`; a complete dataset with unresolved
+rows is marked `needs_review`. Existing nonempty output directories are refused.
+
+For a seeded random dataset, after reviewing pilot runtime and label quality:
+
+```sh
+python -m astrakyle.coverage_dataset --count 1000 --seed 42 --output outputs/coverage_random_42
+```
+
+Random angles are uniform over [0°, 360°); latitude is uniform over [-70°, 70°].
+This samples parameter space, not Earth's surface area. `--step-s` and
+`--tolerance-s` configure resolution and discrepancy limits. The Python
+`two_satellites.run` function now also accepts `second_initial_angle_deg`,
+which defaults to 180° to preserve previous experiments.
+
+The [first training results](docs/planning/coverage-training-results.md) summarize
+accuracy, runtime, and a large validation error near the access boundary.
+
+Train the coverage models using the optional ML dependencies:
+
+```sh
+python -m pip install -e '.[ml]'
+python -m astrakyle.refine_coverage_dataset --dataset outputs/coverage_random_42 --output outputs/coverage_random_42_checked
+python -m astrakyle.train_coverage --dataset outputs/coverage_random_42_checked
+python -m astrakyle.predict_coverage --raan-deg 120 --initial-angle-deg 180 --latitude-deg 50.45
+```
+
+The refinement command copies the source dataset and halves the sampling interval
+for unresolved cases, up to four times, recording the history. Inspect the new
+manifest before training; remaining disagreements keep its status `needs_review`.
+
+Training requires at least 100 checked, unique configurations and validates the
+CSV against its manifest hash. It uses a seeded 70/15/15 split and sine/cosine
+angle features. Each target independently selects the lowest validation MAE
+among a training-mean baseline, standardized linear regression, and two
+200-tree random forests. Test data is reserved until model selection is complete.
+The selected models remain fitted on the training split; predictions are not clipped.
+
+`outputs/coverage_model_42/` contains `models.joblib`, `report.json`,
+`test_predictions.csv`, and `predictions.png`. The report records splits,
+validation scores, test MAE/95th-percentile/maximum errors, latitude and access
+subgroups, out-of-bounds predictions, software versions, and timing comparisons.
+Access errors are percentage points; gap errors are minutes. Load only trusted
+model files: joblib files can execute code. Prediction assumes the original
+fixed geometry and seven-day window, and latitude must be within [-70°, 70°].
+Random-split results measure interpolation; generalization to withheld latitude
+bands and acceptable error thresholds remain to be evaluated before design use.
 
 The [project knowledge base](docs/README.md) provides standalone technical articles with definitions, equations, worked examples, and references.
 

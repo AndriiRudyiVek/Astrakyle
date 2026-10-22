@@ -1,0 +1,3 @@
+# Preserve generated CSV bytes so recorded dataset hashes survive checkout.
+outputs/**/*.csv -text whitespace=cr-at-eol
+outputs/**/*.joblib binary
